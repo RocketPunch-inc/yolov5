@@ -32,6 +32,8 @@ class DetectPeople():
 
     def detect(self, img0):
         """ from utils/datasets:LoadImages
+
+            img0: opencv image object(from image/movie file, IP video stream, ...)
         """
 
         # Padded resize

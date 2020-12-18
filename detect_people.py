@@ -5,7 +5,7 @@ import numpy as np
 import torch
 from models.experimental import attempt_load
 from utils.datasets import letterbox
-from utils.general import non_max_suppression
+from utils.general import non_max_suppression, scale_coords
 from utils.torch_utils import select_device
 
 
@@ -56,10 +56,13 @@ class DetectPeople():
         pred = non_max_suppression(pred, self.conf_thres, self.iou_thres, classes=[0], agnostic=self.agnostic_nms)
 
         # Process detections
+        l_result = []
         for i, det in enumerate(pred):  # detections per image
             if len(det):
+                # Rescale boxes from img_size to im0 size
+                det[:, :4] = scale_coords(img.shape[2:], det[:, :4], img0.shape).round()
+
                 for *xyxy, conf, cls in det:
                     if conf > 0.5:  # value determined by heuristic
-                        return True
-
-        return False
+                        l_result.append(xyxy)
+        return l_result

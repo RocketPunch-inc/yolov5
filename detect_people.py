@@ -30,7 +30,7 @@ class DetectPeople():
         # We will only use class 0 (person), but make sure it's person.
         assert self.names[0] == 'person', 'Class 0 must be person, but it is {}'.format(self.names[0])
 
-    def detect(self, img0):
+    def detect(self, img0, confidence_threshold):
         """ from utils/datasets:LoadImages
 
             img0: opencv image object(from image/movie file, IP video stream, ...)
@@ -63,6 +63,6 @@ class DetectPeople():
                 det[:, :4] = scale_coords(img.shape[2:], det[:, :4], img0.shape).round()
 
                 for *xyxy, conf, cls in det:
-                    if conf > 0.5:  # value determined by heuristic
+                    if conf > confidence_threshold:  # value determined by heuristic
                         l_result.append(xyxy)
         return l_result
